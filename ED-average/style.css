@@ -1,0 +1,46 @@
+/* content.js */
+
+#encart-notes > div {
+	margin: 13px 0;
+	display: flex;
+}
+
+#averageToDisplay {
+	height: 32px;
+	font-size: 22px;
+	margin: 0 20px;
+}
+
+#encart-notes > div > a {
+	height: 32px;
+	width: 32px;
+}
+
+/* index.html */
+
+body > header {
+	width: 360px;
+	display: flex;
+	justify-content: space-around;
+}
+
+body > header > img {
+	width: 70px;
+	height: 50px;
+}
+
+body > header > h1 {
+	font-size: 20px;
+	margin: auto 10px;
+}
+
+body > main {
+	display: flex;
+	justify-content: center;
+}
+
+body > main > button {
+	cursor: pointer;
+	border: solid #000 1px;
+	border-radius: 5px;
+}
