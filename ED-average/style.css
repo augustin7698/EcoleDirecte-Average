@@ -1,45 +1,45 @@
 /* content.js */
 
-#encart-notes > div {
+.ed-container > .main-container > #periode2 > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div {
 	margin: 13px 0;
 	display: flex;
 }
 
-#averageToDisplay {
+.ed-container > .main-container > #periode2 > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div > #averageToDisplay {
 	height: 32px;
 	font-size: 22px;
 	margin: 0 20px;
 }
 
-#encart-notes > div > a {
+.ed-container > .main-container > #periode1 > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div > a {
 	height: 32px;
 	width: 32px;
 }
 
 /* index.html */
 
-body > header {
+#blfhbrkeverqinaeoitjbnqorjkngneqnvkeahvbvjhai7472634722763728363 > header {
 	width: 360px;
 	display: flex;
 	justify-content: space-around;
 }
 
-body > header > img {
+#blfhbrkeverqinaeoitjbnqorjkngneqnvkeahvbvjhai7472634722763728363 > header > img {
 	width: 70px;
 	height: 50px;
 }
 
-body > header > h1 {
+#blfhbrkeverqinaeoitjbnqorjkngneqnvkeahvbvjhai7472634722763728363 > header > h1 {
 	font-size: 20px;
 	margin: auto 10px;
 }
 
-body > main {
+#blfhbrkeverqinaeoitjbnqorjkngneqnvkeahvbvjhai7472634722763728363 > main {
 	display: flex;
 	justify-content: center;
 }
 
-body > main > button {
+#blfhbrkeverqinaeoitjbnqorjkngneqnvkeahvbvjhai7472634722763728363 > main > button {
 	cursor: pointer;
 	border: solid #000 1px;
 	border-radius: 5px;
