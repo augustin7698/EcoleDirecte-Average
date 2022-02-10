@@ -92,6 +92,7 @@ function display() {
 		} else {
 			averageToDisplay = "<div id=\"averageToDisplay\">Moyenne générale: " + average + " /20</div>";
 		}
+		document.getElementById("encart-notes").getElementsByTagName("div")[0]
 		document.getElementById("encart-notes").getElementsByTagName("div")[0].innerHTML = github + averageToDisplay + document.getElementById("encart-notes").getElementsByTagName("div")[0].innerHTML;
 	}
 }
@@ -126,45 +127,46 @@ window.addEventListener("click", function() {
 })
 
 chrome.runtime.onMessage.addListener(function(request) {
-	if (request.greeting == "disable") {
-		disable = true;
-		if (document.getElementById("averageToDisplay")) {
-			document.getElementById("averageToDisplay").style.display = "none";
-		}
-		if (document.getElementById("div")) {
-			document.getElementById("div").style.display = "none";
-		}
-		a = 0;
-		while (document.getElementsByClassName("average")[a]) {
-			document.getElementsByClassName("average")[a].style.display = "none";
-			a++;
-		}
-		a = 0;
-		while (document.getElementsByTagName("th")[a].innerText != "MOYENNE") {
-			a++;
-		}
-		document.getElementsByTagName("th")[a].style.display = "none";
-	} else {
-		disable = false;
-		if (document.getElementById("averageToDisplay")) {
-			document.getElementById("averageToDisplay").style.display = "block";
-		}
-		if (document.getElementById("div")) {
-			document.getElementById("div").style.display = "block";
-		}
-		a = 0;
-		while (document.getElementsByClassName("average")[a]) {
-			document.getElementsByClassName("average")[a].style.display = "";
-			a++;
-		}
-		a = 0;
-		while (document.getElementsByTagName("th")[a]) {
-			if (document.getElementsByTagName("th")[a].innerText != "MOYENNE") {
-				document.getElementsByTagName("th")[a].style.display = "";
+	if (window.location.origin == "https://www.ecoledirecte.com" && window.location.href.includes("Notes")) {
+		if (request.greeting == "disable") {
+			disable = true;
+			if (document.getElementById("averageToDisplay")) {
+				document.getElementById("averageToDisplay").style.display = "none";
 			}
-			a++;
+			if (document.getElementById("div")) {
+				document.getElementById("div").style.display = "none";
+			}
+			a = 0;
+			while (document.getElementsByClassName("average")[a]) {
+				document.getElementsByClassName("average")[a].style.display = "none";
+				a++;
+			}
+			a = 0;
+			while (document.getElementsByTagName("th")[a].innerText != "MOYENNE") {
+				a++;
+			}
+			document.getElementsByTagName("th")[a].style.display = "none";
+		} else {
+			disable = false;
+			if (document.getElementById("averageToDisplay")) {
+				document.getElementById("averageToDisplay").style.display = "block";
+			}
+			if (document.getElementById("div")) {
+				document.getElementById("div").style.display = "block";
+			}
+			a = 0;
+			while (document.getElementsByClassName("average")[a]) {
+				document.getElementsByClassName("average")[a].style.display = "";
+				a++;
+			}
+			a = 0;
+			while (document.getElementsByTagName("th")[a]) {
+				if (document.getElementsByTagName("th")[a].innerText != "MOYENNE") {
+					document.getElementsByTagName("th")[a].style.display = "";
+				}
+				a++;
+			}
+			init();
 		}
-		
-		init()
 	}
 });
