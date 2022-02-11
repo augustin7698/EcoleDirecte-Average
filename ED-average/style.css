@@ -1,6 +1,6 @@
 /* content.js */
 
-.ed-container > .main-container > #periode2 > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div {
+.ed-container > .main-container > .fade > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div {
 	margin: 13px 0;
 	display: flex;
 }
@@ -11,7 +11,7 @@
 	margin: 0 20px;
 }
 
-.ed-container > .main-container > #periode1 > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div > a {
+.ed-container > .main-container > .fade > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div > a {
 	height: 32px;
 	width: 32px;
 }
