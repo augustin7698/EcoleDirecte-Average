@@ -180,9 +180,3 @@ async function init() {
 if (window.location.origin == "https://www.ecoledirecte.com" && window.location.href.includes("Notes")) {
 	init();
 }
-
-window.addEventListener("click", function() {
-	if (window.location.origin == "https://www.ecoledirecte.com" && window.location.href.includes("Notes")) {
-		init()
-	}
-})
