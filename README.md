@@ -3,7 +3,8 @@
 <h2>Functionality</h2>
 <img src="example.png">
 <h2>How to install the extension</h2>
-<p> - Save the entire folder called <code>ED-average</code>.</p>
+<p> - Save the folder <a href="https://github.com/augustin7698/EcoleDirecte-Average/raw/main/ED-average.zip">ED-average</a>.</p>
+<p> - Unzip it.</p>
 <p> - Open <code>chrome://extensions</code>.</p>
 <p> - active the developper mode (top right).</p>
 <p> - click to <code>load unpacked</code>.</p>
