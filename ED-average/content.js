@@ -20,12 +20,12 @@ if (disable == 0) {
 }
 
 // fonction d'attente
-async function wait(Ms, FuncToExe) {
+async function wait(Ms) {
 	await new Promise(resolve => setTimeout(resolve, Ms));
-	if (FuncToExe == "" || FuncToExe == null || FuncToExe == undefined) {} else {
-		eval(arguments[1] + '()');
-	}
 }
+
+
+//sleep
 
 function column() {
 	// ajouter la colonne moyenne
@@ -168,6 +168,7 @@ async function init() {
 	while (document.getElementsByTagName("table")[0] == undefined) {
 		await wait(100);
 	}
+	await wait(1500);
 	column();
 
 	for (var i = document.getElementsByClassName('notes').length - 1; i >= 0; i--) {
@@ -177,6 +178,16 @@ async function init() {
 	display();
 }
 
-if (window.location.origin == "https://www.ecoledirecte.com" && window.location.href.includes("Notes")) {
-	init();
+
+
+async function detection() {
+	if (window.location.origin == "https://www.ecoledirecte.com") {
+		while (window.location.origin == "https://www.ecoledirecte.com" && !window.location.href.includes("Notes")) {
+			await wait(250);
+		}
+		if (window.location.origin == "https://www.ecoledirecte.com" && window.location.href.includes("Notes")) {
+			init();
+		}
+	}
 }
+detection();
