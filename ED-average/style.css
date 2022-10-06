@@ -3,11 +3,12 @@
 .ed-container > .main-container > .fade > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div {
 	margin: 13px 0;
 	display: flex;
-	background: #DDD;
+	background: #e4e7ea;
 	width: fit-content;
 	justify-content: center;
 	padding: 10px;
 	border-radius: 5px;
+	color: #555;
 }
 
 .ed-container > .main-container > .fade  > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div > #averageToDisplay {
