@@ -39,9 +39,7 @@ function getMoyenne() {
 			denominateur = (document.getElementsByClassName("discipline")[x].parentElement.children[(1)].children[i].children[(0)].innerText.split("/")[1] || "20").replaceAll(",", ".");
 			result = Number(numerateur) / Number(denominateur); // obtenir une note
 
-			console.log(result);
 			if (String(result) != "NaN") { // ajouter la note au fichier
-				console.log(result);
 				total += result;
 				effectif++;
 			}
@@ -50,21 +48,49 @@ function getMoyenne() {
 		average = total / effectif;
 		if (String(average) != "NaN") {
 			if (document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML == "Ecrit") { // vérifier l'emplacement de la note
+
 				notes[document.getElementsByClassName("discipline")[x - 1].firstChild.firstChild.innerHTML][document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] = average;
+				sousmatiere = true;
 			} else if (document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML == "Oral") {
-				console.debug("yes;" + average);
+
 				if (document.getElementsByClassName("discipline")[x - 1].firstChild.firstChild.innerHTML == "Ecrit") {
-					console.debug("yes;" + average);
 					notes[document.getElementsByClassName("discipline")[x - 2].firstChild.firstChild.innerHTML][document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] = average;
+
 				} else {
 					notes[document.getElementsByClassName("discipline")[x - 1].firstChild.firstChild.innerHTML][document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] = average;
+
 				}
+				sousmatiere = true;
 			} else { // créer un nouveau dossier pour la matière
 				notes[document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] = average;
+				sousmatiere = false;
 			}
-			document.getElementsByClassName("discipline")[x].parentElement.children[3].innerHTML = average * 20;
+
+			// afficher les moyennes
+			if (sousmatiere) {
+				document.getElementsByClassName("discipline")[x].parentElement.children[3].innerHTML = "( " + average * 20 + " /20 )";
+			} else {
+				document.getElementsByClassName("discipline")[x].parentElement.children[3].innerHTML = average * 20 + " /20";
+			}
 		}
 	}
+
+	// second layer pour les matières contenant des sous mtières
+	for (x = 1; x < document.getElementsByClassName("discipline").length -1; x++) { // pour toutes les matières
+		if (document.getElementsByClassName("discipline")[x].parentElement.children[3].innerHTML == "" && (document.getElementsByClassName("discipline")[x + 1].parentElement.children[0].children[0].innerText == 'Ecrit' || document.getElementsByClassName("discipline")[x + 1].parentElement.children[0].children[0].innerText == 'Oral')) { // vérifie si la 1e cases après appartient à cette matière
+
+			if (document.getElementsByClassName("discipline")[x + 2].parentElement.children[0].children[0].innerText == 'Ecrit' || document.getElementsByClassName("discipline")[x + 2].parentElement.children[0].children[0].innerText == 'Oral') { // vérifie si la 2e cases après appartient à cette matière
+				average = (Number(document.getElementsByClassName("discipline")[x + 1].parentElement.children[3].innerText.replace("( ", "").replace("/20 )", "")) + Number(document.getElementsByClassName("discipline")[x + 2].parentElement.children[3].innerText.replace("( ", "").replace("/20 )", ""))) / 2;
+
+			} else {
+				average = Number(document.getElementsByClassName("discipline")[x + 1].parentElement.children[(3)].innerText.replace("( ", "").replace("/20 )", ""));
+				
+			}
+			// affiche la moyenne trouvé.
+			document.getElementsByClassName("discipline")[x].parentElement.children[3].innerHTML = average + " /20";
+		}
+	}
+		
 
 
 	total = effectif = 0;
@@ -106,7 +132,7 @@ async function init() {
 	}
 	await new Promise(resolve => setTimeout(resolve, 1500));
 	column();
-	getMoyenne();	
+	getMoyenne();
 }
 
 
@@ -121,7 +147,7 @@ async function detection() {
 		}
 	}
 }
-
+detection();
 
 addEventListener('click', (event) => {
 	detection();
