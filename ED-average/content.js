@@ -18,8 +18,14 @@ function getMoyenne() {
 	for (x = 1; x < document.getElementsByClassName("discipline").length; x++) { // pour toutes les matières
 		// créer le tableau
 		if (notes[document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] == undefined) { // vérifier 
-			if (document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML == "Oral" || document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML == "Ecrit") { // créer un nouveau dossier pour une sous matière
+			if (document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML == "Ecrit") { // tableau dans une matièere écrite
 				notes[document.getElementsByClassName("discipline")[x - 1].firstChild.firstChild.innerHTML][document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] = [];
+			} else if (document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML == "Oral") { // tableau dans une matièere orale
+				if (document.getElementsByClassName("discipline")[x - 1].firstChild.firstChild.innerHTML == "Ecrit") {
+					notes[document.getElementsByClassName("discipline")[x - 2].firstChild.firstChild.innerHTML][document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] = [];
+				} else {
+					notes[document.getElementsByClassName("discipline")[x - 1].firstChild.firstChild.innerHTML][document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] = [];
+				}
 			} else { // créer un nouveau dossier pour la matière
 				notes[document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] = [];
 			}
@@ -33,7 +39,9 @@ function getMoyenne() {
 			denominateur = (document.getElementsByClassName("discipline")[x].parentElement.children[(1)].children[i].children[(0)].innerText.split("/")[1] || "20").replaceAll(",", ".");
 			result = Number(numerateur) / Number(denominateur); // obtenir une note
 
+			console.log(result);
 			if (String(result) != "NaN") { // ajouter la note au fichier
+				console.log(result);
 				total += result;
 				effectif++;
 			}
@@ -41,13 +49,20 @@ function getMoyenne() {
 		// créer les moyennes
 		average = total / effectif;
 		if (String(average) != "NaN") {
-			if (document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML == "Oral" || document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML == "Ecrit") { // vérifier l'emplacement de la note
+			if (document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML == "Ecrit") { // vérifier l'emplacement de la note
 				notes[document.getElementsByClassName("discipline")[x - 1].firstChild.firstChild.innerHTML][document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] = average;
-				document.getElementsByClassName("discipline")[x].parentElement.children[3].innerHTML = average * 20;
+			} else if (document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML == "Oral") {
+				console.debug("yes;" + average);
+				if (document.getElementsByClassName("discipline")[x - 1].firstChild.firstChild.innerHTML == "Ecrit") {
+					console.debug("yes;" + average);
+					notes[document.getElementsByClassName("discipline")[x - 2].firstChild.firstChild.innerHTML][document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] = average;
+				} else {
+					notes[document.getElementsByClassName("discipline")[x - 1].firstChild.firstChild.innerHTML][document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] = average;
+				}
 			} else { // créer un nouveau dossier pour la matière
 				notes[document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] = average;
-				document.getElementsByClassName("discipline")[x].parentElement.children[3].innerHTML = average * 20;
 			}
+			document.getElementsByClassName("discipline")[x].parentElement.children[3].innerHTML = average * 20;
 		}
 	}
 
@@ -58,11 +73,16 @@ function getMoyenne() {
 			total += Object.values(notes)[i];
 			effectif++;
 		} else if (Object.values(Object.values(notes)[i])[0] != undefined) {
-			total += ((Object.values(Object.values(notes)[i])[0] || 0) + (Object.values(Object.values(notes)[i])[1] || 0)) / Object.values(Object.values(notes)[i]).length
+			if (Object.values(Object.values(notes)[i])[0].length == 0 || Object.values(Object.values(notes)[i])[1].length == 0) {
+				qutnt = 1;
+			} else {
+				qutnt = 2;
+			}
+			total += ((Object.values(Object.values(notes)[i])[0] || 0) + (Object.values(Object.values(notes)[i])[1] || 0)) / qutnt;
 			effectif++;
 		}
 	}
-	average = (total / effectif) *20;
+	average = (total / effectif) * 20;
 
 	display(average);
 }
@@ -101,4 +121,8 @@ async function detection() {
 		}
 	}
 }
-detection();
+
+
+addEventListener('click', (event) => {
+	detection();
+});
