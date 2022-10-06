@@ -3,6 +3,11 @@
 .ed-container > .main-container > .fade > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div {
 	margin: 13px 0;
 	display: flex;
+	background: #DDD;
+	width: fit-content;
+	justify-content: center;
+	padding: 10px;
+	border-radius: 5px;
 }
 
 .ed-container > .main-container > .fade  > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div > #averageToDisplay {
@@ -14,12 +19,4 @@
 .ed-container > .main-container > .fade > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div > a {
 	height: 32px;
 	width: 32px;
-}
-
-.ed-container > .main-container > .fade > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div > #desactivation {
-	color:  #555;
-	background-color: #e4e7ea;
-	border-radius: 4px;
-	padding: 10px 15px;
-	border:  0;
 }
