@@ -21,3 +21,13 @@
 	height: 32px;
 	width: 32px;
 }
+
+@keyframes load {
+	0% {
+		fill: #000;
+	} 50% {
+		fill: #999;
+	} 100% {
+		fill: #000;
+	}
+}
