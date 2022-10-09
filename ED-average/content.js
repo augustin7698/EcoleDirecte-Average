@@ -11,10 +11,17 @@ function column() {
 	for (var i = document.getElementsByClassName("graph").length -1; i >= 0; i--) {
 		document.getElementsByClassName("graph")[i].style.display = "none";
 	}
+
+	// afficher la graphique d'évolution des notes
+	document.getElementsByClassName("bloc-legende")[0].remove()
+	document.getElementById("encart-notes").innerHTML += "<div id='flex'><div class='bloc-legende clear hidden-print ng-star-inserted' style='grid-row: initial;'><div class='col-md-6 ng-star-inserted'><table><caption>Légende des notes</caption><tbody><tr><td style='width: 70px;'> note <sup>(x)</sup></td><td>Note coefficientée</td></tr><tr><td> note <sub>/X</sub></td><td>Note sur X</td></tr><tr><td>(note)</td><td>Note non significative</td></tr><tr><td><span class='newNote'>note</span></td><td>Nouvelle note</td></tr><!----><tr><td><span class='note-examen-blanc'>note</span></td><td>Examen blanc</td></tr><tr><td>Abs</td><td>Absent</td></tr><tr><td>Disp</td><td>Dispensé</td></tr><tr><td>NE</td><td>Non évalué</td></tr><tr><td>EA</td><td>En attente</td></tr></tbody></table></div></div><canvas id='graphic'></canvas></div>";
 }
 
 function getMoyenne() {
-	notes = {}
+	notes = {};
+	everynotes = {};
+	l = 0;
+
 	for (x = 1; x < document.getElementsByClassName("discipline").length; x++) { // pour toutes les matières
 		// créer le tableau
 		if (notes[document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] == undefined) { // vérifier 
@@ -30,9 +37,9 @@ function getMoyenne() {
 				notes[document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] = [];
 			}
 		}
-		
-		// obtenir les notes
-		len = document.getElementsByClassName("discipline")[x].parentElement.children[1].children.length; // nombre de note
+
+		len = document.getElementsByClassName("discipline")[x].parentElement.children[1].children.length; // nombre de notes
+
 		effectif = total = 0;
 		for (i = 0; i < len; i++) { // pour chaque note
 			numerateur = document.getElementsByClassName("discipline")[x].parentElement.children[(1)].children[i].children[(0)].innerText.split("/")[0].replaceAll(",", ".");
@@ -42,7 +49,16 @@ function getMoyenne() {
 			if (String(result) != "NaN") { // ajouter la note au fichier
 				total += result;
 				effectif++;
+
+				// GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS
+				l++;
+				date = document.getElementsByClassName("discipline")[x].parentElement.children[(1)].children[i].title.split(" - ");
+				date = date[date.length - 1].split(" ");
+				date = Number(date[date.length - 2]) + Number(date[date.length - 1].replace("septembre", 0).replace("octobre", 30).replace("novembre", 61).replace("decembre", 91).replace("janvier", 122).replace("février", 152).replace("mars", 181.5).replace("avril", 212.5).replace("mai", 242.5).replace("juin", 273.5).replace("juillet", 303.5).replace("aout", 334.5));
+				everynotes[date + ":" + l] = result;
+				// GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS
 			}
+			firstnote = i;
 		}
 		// créer les moyennes
 		average = total / effectif;
@@ -68,14 +84,44 @@ function getMoyenne() {
 
 			// afficher les moyennes
 			if (sousmatiere) {
-				document.getElementsByClassName("discipline")[x].parentElement.children[3].innerHTML = "( " + average * 20 + " /20 )";
+				document.getElementsByClassName("discipline")[x].parentElement.children[3].innerHTML = "( " + Math.round(average * 20 * 1000) / 1000 + " /20 )";
 			} else {
 				document.getElementsByClassName("discipline")[x].parentElement.children[3].innerHTML = average * 20 + " /20";
 			}
 		}
 	}
 
-	// second layer pour les matières contenant des sous mtières
+	// effacer les lignes sans notes
+	for (n = 1; n < document.getElementsByClassName("discipline").length; n++) {
+		len = document.getElementsByClassName("discipline")[n].parentElement.children[1].children.length; // nombre de note
+		if (len == 0) { // supprimer la ligne si il n'ya pas de notes
+			if (document.getElementsByClassName("discipline")[n + 1] == undefined) { //  si x+1 n'éxiste pas
+				document.getElementsByClassName("discipline")[n].parentElement.remove();
+				n--;
+
+			} else if (!document.getElementsByClassName("discipline")[n + 1].parentElement.children[0].classList.contains("sousmatiere")) { // si x+1 n'est pas une sous matiere
+				document.getElementsByClassName("discipline")[n].parentElement.remove();
+				n--;
+
+			} else if ((document.getElementsByClassName("discipline")[n + 1].parentElement.children[1].children.length == 0 && document.getElementsByClassName("discipline")[n + 1].parentElement.children[0].classList.contains("sousmatiere"))) { // si x+1 est une sous matiere et est égale à 0
+
+				if (document.getElementsByClassName("discipline")[n + 2] == undefined) { //  si x+2 n'éxiste pas
+					document.getElementsByClassName("discipline")[n].parentElement.remove();
+					n--;
+
+				} else if ((!document.getElementsByClassName("discipline")[n + 2].parentElement.children[0].classList.contains("sousmatiere"))) { //  si x+2 n'est pas une sous matiere
+					document.getElementsByClassName("discipline")[n].parentElement.remove();
+					n--;
+
+				} else if (document.getElementsByClassName("discipline")[n + 2].parentElement.children[1].children.length == 0 && document.getElementsByClassName("discipline")[n + 1].parentElement.children[0].classList.contains("sousmatiere")) { // si x+2 est une sous matiere et est égale à 0
+					document.getElementsByClassName("discipline")[n].parentElement.remove();
+					n--;
+				}
+			}
+		}
+	}
+
+	// second layer pour les matières contenant des sous matières
 	for (x = 1; x < document.getElementsByClassName("discipline").length -1; x++) { // pour toutes les matières
 		if (document.getElementsByClassName("discipline")[x].parentElement.children[3].innerHTML == "" && (document.getElementsByClassName("discipline")[x + 1].parentElement.children[0].children[0].innerText == 'Ecrit' || document.getElementsByClassName("discipline")[x + 1].parentElement.children[0].children[0].innerText == 'Oral')) { // vérifie si la 1e cases après appartient à cette matière
 
@@ -92,14 +138,14 @@ function getMoyenne() {
 	}
 		
 
-
+	// moyenne globale
 	total = effectif = 0;
 	for (i = 0; i < Object.values(notes).length; i++) {
 		if (Object.values(notes)[i] * 2 != Object.values(notes)[i]) {
 			total += Object.values(notes)[i];
 			effectif++;
 		} else if (Object.values(Object.values(notes)[i])[0] != undefined) {
-			if (Object.values(Object.values(notes)[i])[0].length == 0 || Object.values(Object.values(notes)[i])[1].length == 0) {
+			if (Object.values(Object.values(notes)[i])[1] == undefined) {
 				qutnt = 1;
 			} else {
 				qutnt = 2;
@@ -109,8 +155,70 @@ function getMoyenne() {
 		}
 	}
 	average = (total / effectif) * 20;
-
+	
 	display(average);
+
+	// GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS
+	// tableau to list
+	arr = [];
+	for (var key in everynotes) {
+		if (everynotes.hasOwnProperty(key)) {
+			arr.push( [ key, everynotes[key] ] );
+		}
+	}
+	arr.sort();
+
+	datapoints = [];
+	datapoints2 = [arr[firstnote][1] * 20];
+	// double tableau to simple tableau
+	for (i = 0; i < arr.length; i++) {
+		datapoints.push(arr[i][1] * 20);
+		datapoints2.push(((datapoints2[datapoints2.length - 1] * datapoints2.length) + (arr[i][1] * 20)) / (datapoints2.length +1));
+		if (i == 0) datapoints2.shift();
+	}
+	console.log(datapoints2);
+	
+	// create chart
+	labels = [];
+	for (let i = 0; i < datapoints.length; ++i) {
+		labels.push(i.toString());
+	}
+
+	massPopChart = new Chart(document.getElementById("graphic").getContext('2d'), {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [{
+				label: 'Notes ce trimestre',
+				data: datapoints,
+				borderColor: "#000",
+				tension: 0.2,
+				pointRadius: 0,
+			},{
+				label: 'Evolution de la moyenne (non pondéré par matières), écart de ' + Math.round(Math.sqrt((datapoints2[datapoints2.length -1] - average) ** 2) * 1000) / 1000 + ' avec la moyenne générale', // nombre positif d'écart entre la moyenne pondéré et non pondéré par matiere
+				data: datapoints2,
+				borderColor: "#F00",
+				tension: 0.2,
+				pointRadius: 0,
+			}]
+		},
+		options: {
+			responsive: true,
+			plugins: {
+				title: {
+					display: true,
+					text: 'Evolution de tes notes ce trimestre',
+				},
+			},
+			scales: {
+				y: {
+					suggestedMin: 0,
+					suggestedMax: 20,
+				}
+			}
+		},
+	});
+	// GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS
 }
 
 function display(average) {
@@ -118,6 +226,7 @@ function display(average) {
 	if (String(average) == "NaN") {
 		averageToDisplay = "<div id=\"averageToDisplay\">aucune note</div>"
 	} else {
+		average = Math.round(average * 1000) / 1000;
 		averageToDisplay = "<div id=\"averageToDisplay\">Moyenne générale: " + average + " /20</div>";
 	}
 	
@@ -146,7 +255,7 @@ async function detection() {
 		while (window.location.origin == "https://www.ecoledirecte.com" && !window.location.href.includes("Notes")) {
 			await new Promise(resolve => setTimeout(resolve, 100));
 		}
-		if (window.location.origin == "https://www.ecoledirecte.com" && window.location.href.includes("Notes")) {
+		if (window.location.origin == "https://www.ecoledirecte.com" && window.location.href.includes("Notes") && document.getElementById("averageToDisplay") == undefined) {
 			init();
 		}
 	}

@@ -11,15 +11,45 @@
 	color: #555;
 }
 
+
 .ed-container > .main-container > .fade  > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div > #averageToDisplay {
 	height: 32px;
 	font-size: 22px;
-	margin: auto 20px;
+	margin: auto 10px;
 }
 
 .ed-container > .main-container > .fade > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div > a {
 	height: 32px;
 	width: 32px;
+	margin: auto;
+}
+
+.ed-container > .main-container > .fade > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div#flex {
+	display: flex;
+	justify-content: start;
+	width: 100%;
+}
+
+.ed-container > .main-container > .fade > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div#flex > div.bloc-legende {
+	margin: 0;
+	padding: 0;
+	background: #fff;
+	border-radius: 5px;
+}
+
+
+.ed-container > .main-container > .fade > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div#flex > div.bloc-legende > div {
+	width: 100%;
+}
+
+
+.ed-container > .main-container > .fade > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div#flex > canvas#graphic {
+	width: 70% !important;
+	height: auto !important;
+	margin: 0 auto;
+	border-radius: 5px;
+	background: #fff;
+	padding: 10px;
 }
 
 @keyframes load {

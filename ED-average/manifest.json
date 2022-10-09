@@ -2,10 +2,10 @@
 	"name": "ED Average",
 	"version": "1.0",
 	"manifest_version": 3,
-	"description": "éxtension permettant l'affichage de la moyenne par matière et générale sur le site internet ecole directe",
+	"description": "Extension permettant l'affichage de la moyenne générale par matière sur le site internet ecole directe et bien plus...",
 	"content_scripts": [{
 		"matches": ["<all_urls>"],
-		"js": ["content.js"],
+		"js": ["content.js", "chart.js"],
 		"css": ["style.css"]
 	}],
 	"icons": {
