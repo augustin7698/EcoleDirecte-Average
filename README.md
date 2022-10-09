@@ -14,3 +14,4 @@
 <p> - the <code>manifest.json</code> is the setting file to coordonate all file.</p>
 <p> - the <code>style.css</code> is the file that allow the layout of the inserted element.</p>
 <p> - the <code>content.js</code> is the file that calculates your average and displays it.</p>
+<p> - the <code>chart.js</code> is the file that generate the chart of your notes.</p>
