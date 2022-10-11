@@ -122,7 +122,6 @@ function getMoyenne() {
 	}
 
 	
-	console.log(notes)
 
 	// moyenne globale
 	total = 0;
