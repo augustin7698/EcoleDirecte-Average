@@ -174,9 +174,9 @@ function getMoyenne() {
 	for (let i = 0; i < datapoints.length; ++i) {
 		labels.push(i.toString());
 	}
+	
 	radius = 4;
 	tension = 0.2;
-
 	massPopChart = new Chart(document.getElementById("graphic").getContext('2d'), {
 		type: 'line',
 		data: {
@@ -188,7 +188,7 @@ function getMoyenne() {
 				tension: tension,
 				pointRadius: radius,
 			},{
-				label: 'Evolution de la moyenne (non pondéré par matières), écart de ' + Math.round(Math.sqrt((datapoints2[datapoints2.length -1] - average) ** 2) * 1000) / 1000 + ' avec la moyenne générale', // nombre positif d'écart entre la moyenne pondéré et non pondéré par matiere
+				label: 'Evolution de la moyenne (non pondéré par matières), écart de ' + Math.round(Math.sqrt((datapoints2[datapoints2.length -1] - GlobalAverage) ** 2) * 1000) / 1000 + ' avec la moyenne générale', // nombre positif d'écart entre la moyenne pondéré et non pondéré par matiere
 				data: datapoints2,
 				borderColor: "#F00",
 				tension: tension,
