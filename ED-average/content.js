@@ -49,8 +49,8 @@ function getMoyenne() {
 
 		effectif = total = 0;
 		for (i = 0; i < len; i++) { // pour chaque note
-			numerateur = document.getElementsByClassName("discipline")[1].parentElement.children[constEvalPos].children[1].children[(0)].innerText.split("/")[0].replaceAll(",", ".");
-			denominateur = (document.getElementsByClassName("discipline")[1].parentElement.children[constEvalPos].children[1].children[(0)].innerText.split("/")[1] || "20").replaceAll(",", ".").split("(")[0];
+			numerateur = document.getElementsByClassName("discipline")[x].parentElement.children[constEvalPos].children[i].children[(0)].innerText.split("/")[0].replaceAll(",", ".");
+			denominateur = (document.getElementsByClassName("discipline")[x].parentElement.children[constEvalPos].children[i].children[(0)].innerText.split("/")[1] || "20").replaceAll(",", ".").split("(")[0];
 			result = Number(numerateur) / Number(denominateur); // obtenir une note
 
 			if (String(result) != "NaN") { // ajouter la note au fichier
@@ -96,7 +96,7 @@ function getMoyenne() {
 	}
 
 	// effacer les lignes sans notes
-	for (n = document.getElementsByClassName("discipline").length - 1; n > 1; n--) {
+	for (n = document.getElementsByClassName("discipline").length - 1; n >= 1; n--) {
 		if (document.getElementsByClassName("discipline")[n].parentElement.lastChild.innerText == "") {
 			if (document.getElementsByClassName("discipline")[n].classList.contains("sousmatiere")) { // si c'est une sous-matiere
 				document.getElementsByClassName("discipline")[n].parentElement.remove();
@@ -110,7 +110,7 @@ function getMoyenne() {
 		}
 	}
 
-	// second layer pour les matières contenant des sous matières
+	// moyenne pour les matières contenant des sous matières
 	for (x = 1; x < document.getElementsByClassName("discipline").length - 1; x++) { // pour toutes les matières
 
 		if (!document.getElementsByClassName("discipline")[x].parentElement.children[0].classList.contains("sousmatiere")) { // si ce n'est pas une sous matiere
@@ -260,6 +260,21 @@ function getMoyenneWME() {
         }
         x++;
     }
+    
+    // effacer les lignes sans notes
+	for (n = document.getElementsByClassName("discipline").length - 1; n >= 1; n--) {
+		if (document.getElementsByClassName("discipline")[n].parentElement.lastChild.innerText == "") {
+			if (document.getElementsByClassName("discipline")[n].classList.contains("sousmatiere")) { // si c'est une sous-matiere
+				document.getElementsByClassName("discipline")[n].parentElement.remove();
+				
+			} else if (n == document.getElementsByClassName("discipline").length - 1) { // si c'est la dernière moyenne
+				document.getElementsByClassName("discipline")[n].parentElement.remove();
+				
+			} else if (! document.getElementsByClassName("discipline")[n + 1].classList.contains("sousmatiere")) {
+				document.getElementsByClassName("discipline")[n].parentElement.remove();
+			}
+		}
+	}
 	
 	for (x = 1; x < document.getElementsByClassName("discipline").length; x++) { // pour toutes les matières
 		// créer le tableau
