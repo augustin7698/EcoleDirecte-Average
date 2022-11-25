@@ -1,26 +1,35 @@
 function column() {
-	// ajouter la colonne moyenne
-	if (!document.getElementsByClassName("average")[0]) {
-		for (var i = document.getElementsByClassName("notes").length - 1; i > 0; i--) {
-			document.getElementsByClassName("notes")[i].parentElement.innerHTML = document.getElementsByClassName("notes")[i].parentElement.innerHTML + "<td class=\"average\"></td>";
-		}
-		document.getElementsByClassName("notes")[0].parentElement.innerHTML = document.getElementsByClassName("notes")[0].parentElement.innerHTML + "<th>Moyennes</th>";
-	}
 
-	// supprimer la colonne graph
-	for (var i = document.getElementsByClassName("graph").length -1; i >= 0; i--) {
-		document.getElementsByClassName("graph")[i].style.display = "none";
-	}
-
-	// afficher la graphique d'évolution des notes
+    // afficher la graphique d'évolution des notes
 	document.getElementsByClassName("bloc-legende")[0].remove()
 	document.getElementById("encart-notes").innerHTML += "<div id='flex'><div class='bloc-legende clear hidden-print ng-star-inserted' style='grid-row: initial;'><div class='col-md-6 ng-star-inserted'><table><caption>Légende des notes</caption><tbody><tr><td style='width: 70px;'> note <sup>(x)</sup></td><td>Note coefficientée</td></tr><tr><td> note <sub>/X</sub></td><td>Note sur X</td></tr><tr><td>(note)</td><td>Note non significative</td></tr><tr><td><span class='newNote'>note</span></td><td>Nouvelle note</td></tr><!----><tr><td><span class='note-examen-blanc'>note</span></td><td>Examen blanc</td></tr><tr><td>Abs</td><td>Absent</td></tr><tr><td>Disp</td><td>Dispensé</td></tr><tr><td>NE</td><td>Non évalué</td></tr><tr><td>EA</td><td>En attente</td></tr></tbody></table></div></div><canvas id='graphic'></canvas></div>";
+    
+	// créer les colonnes des moyennes
+    for (var i = document.getElementsByClassName("notes").length - 1; i > 0; i--) {
+        document.getElementsByClassName("notes")[i].parentElement.innerHTML = document.getElementsByClassName("notes")[i].parentElement.innerHTML + "<td class=\"average\"></td>";
+    }
+    document.getElementsByClassName("notes")[0].parentElement.innerHTML = document.getElementsByClassName("notes")[0].parentElement.innerHTML + "<th>Moyennes</th>";
+
+    // supprimer les colonnes graph
+    for (var i = document.getElementsByClassName("graph").length -1; i >= 0; i--) {
+        document.getElementsByClassName("graph")[i].style.display = "none";
+    }
 }
 
 function getMoyenne() {
 	notes = {};
 	everynotes = {};
 	l = 0;
+    
+    // determiner constEvalPos => positions du tableau des notes
+    x = 0;
+    while (document.getElementsByClassName("discipline")[0].parentElement.children[x]) {
+        if (document.getElementsByClassName("discipline")[0].parentElement.children[x].innerText == "EVALUATIONS") {
+            constEvalPos = x;
+            break;
+        }
+        x++;
+    }
 	
 	for (x = 1; x < document.getElementsByClassName("discipline").length; x++) { // pour toutes les matières
 		// créer le tableau
@@ -36,12 +45,12 @@ function getMoyenne() {
 			}
 		}
 
-		len = document.getElementsByClassName("discipline")[x].parentElement.children[1].children.length; // nombre de notes
+		len = document.getElementsByClassName("discipline")[x].parentElement.children[constEvalPos].children.length; // nombre de notes
 
 		effectif = total = 0;
 		for (i = 0; i < len; i++) { // pour chaque note
-			numerateur = document.getElementsByClassName("discipline")[x].parentElement.children[(1)].children[i].children[(0)].innerText.split("/")[0].replaceAll(",", ".");
-			denominateur = (document.getElementsByClassName("discipline")[x].parentElement.children[(1)].children[i].children[(0)].innerText.split("/")[1] || "20").replaceAll(",", ".");
+			numerateur = document.getElementsByClassName("discipline")[1].parentElement.children[constEvalPos].children[1].children[(0)].innerText.split("/")[0].replaceAll(",", ".");
+			denominateur = (document.getElementsByClassName("discipline")[1].parentElement.children[constEvalPos].children[1].children[(0)].innerText.split("/")[1] || "20").replaceAll(",", ".").split("(")[0];
 			result = Number(numerateur) / Number(denominateur); // obtenir une note
 
 			if (String(result) != "NaN") { // ajouter la note au fichier
@@ -50,7 +59,7 @@ function getMoyenne() {
 
 				// GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS
 				l++;
-				date = document.getElementsByClassName("discipline")[x].parentElement.children[(1)].children[i].title.split(" - ");
+				date = document.getElementsByClassName("discipline")[x].parentElement.children[constEvalPos].children[i].title.split(" - ");
 				date = date[date.length - 1].split(" ");
 				date = Number(date[date.length - 2]) + Number(date[date.length - 1].replace("septembre", 0).replace("octobre", 30).replace("novembre", 61).replace("decembre", 91).replace("janvier", 122).replace("février", 152).replace("mars", 181.5).replace("avril", 212.5).replace("mai", 242.5).replace("juin", 273.5).replace("juillet", 303.5).replace("aout", 334.5));
 				everynotes[date + ":" + l] = result;
@@ -219,6 +228,150 @@ function getMoyenne() {
 	// GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS
 }
 
+function getMoyenneWME() {
+    // afficher la graphique d'évolution des notes
+	document.getElementsByClassName("bloc-legende")[0].remove()
+	document.getElementById("encart-notes").innerHTML += "<div id='flex'><div class='bloc-legende clear hidden-print ng-star-inserted' style='grid-row: initial;'><div class='col-md-6 ng-star-inserted'><table><caption>Légende des notes</caption><tbody><tr><td style='width: 70px;'> note <sup>(x)</sup></td><td>Note coefficientée</td></tr><tr><td> note <sub>/X</sub></td><td>Note sur X</td></tr><tr><td>(note)</td><td>Note non significative</td></tr><tr><td><span class='newNote'>note</span></td><td>Nouvelle note</td></tr><!----><tr><td><span class='note-examen-blanc'>note</span></td><td>Examen blanc</td></tr><tr><td>Abs</td><td>Absent</td></tr><tr><td>Disp</td><td>Dispensé</td></tr><tr><td>NE</td><td>Non évalué</td></tr><tr><td>EA</td><td>En attente</td></tr></tbody></table></div></div><canvas id='graphic'></canvas></div>";
+
+    // calculer la moyenne générale puis l'afficher
+    total = 0;
+    effectif = 0;
+    for (i = document.getElementsByClassName("relevemoyenne").length - 1; i >= 0; i--) {
+        note = Number(document.getElementsByClassName("relevemoyenne")[i].innerText.replace(",", "."));
+        if (note == note && document.getElementsByClassName("relevemoyenne")[i].innerText != "") {
+            total += note;
+            effectif += 1;
+            console.log(note)
+        }
+    }
+    GlobalAverage = total / effectif;
+    display(GlobalAverage);
+
+    notes = {};
+	everynotes = {};
+	l = 0;
+    
+    // determiner constEvalPos => positions du tableau des notes
+    x = 0;
+    while (document.getElementsByClassName("discipline")[0].parentElement.children[x]) {
+        if (document.getElementsByClassName("discipline")[0].parentElement.children[x].innerText == "EVALUATIONS") {
+            constEvalPos = x;
+            break;
+        }
+        x++;
+    }
+	
+	for (x = 1; x < document.getElementsByClassName("discipline").length; x++) { // pour toutes les matières
+		// créer le tableau
+		if (notes[document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] == undefined) {
+			if (document.getElementsByClassName("discipline")[x].classList.contains("sousmatiere")) { // créer un nouveau dossier pour la sous matière
+				if (document.getElementsByClassName("discipline")[x - 1].classList.contains("sousmatiere")) { // sous matiere avant elle
+					notes[document.getElementsByClassName("discipline")[x - 2].firstChild.firstChild.innerHTML][1] = [];
+				} else {
+					notes[document.getElementsByClassName("discipline")[x - 1].firstChild.firstChild.innerHTML][0] = [];
+				}
+			} else { // créer un nouveau dossier pour la matière
+				notes[document.getElementsByClassName("discipline")[x].firstChild.firstChild.innerHTML] = [];
+			}
+		}
+
+		len = document.getElementsByClassName("discipline")[x].parentElement.children[constEvalPos].children.length; // nombre de notes
+
+		effectif = total = 0;
+		for (i = 0; i < len; i++) { // pour chaque note
+			numerateur = document.getElementsByClassName("discipline")[x].parentElement.children[constEvalPos].children[i].children[(0)].innerText.split("/")[0].replaceAll(",", ".");
+			denominateur = (document.getElementsByClassName("discipline")[x].parentElement.children[constEvalPos].children[i].children[(0)].innerText.split("/")[1] || "20").replaceAll(",", ".").split("(")[0];
+			result = Number(numerateur) / Number(denominateur); // obtenir une note
+
+			if (String(result) != "NaN") { // ajouter la note au fichier
+				total += result;
+				effectif++;
+
+				// GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS
+				l++;
+				date = document.getElementsByClassName("discipline")[x].parentElement.children[constEvalPos].children[i].title.split(" - ");
+				date = date[date.length - 1].split(" ");
+				date = Number(date[date.length - 2]) + Number(date[date.length - 1].replace("septembre", 0).replace("octobre", 30).replace("novembre", 61).replace("decembre", 91).replace("janvier", 122).replace("février", 152).replace("mars", 181.5).replace("avril", 212.5).replace("mai", 242.5).replace("juin", 273.5).replace("juillet", 303.5).replace("aout", 334.5));
+				everynotes[date + ":" + l] = result;
+				// GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS
+			}
+			firstnote = i;
+		}
+    }
+    
+    // GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS
+	// tableau to list
+	arr = [];
+	for (var key in everynotes) {
+		if (everynotes.hasOwnProperty(key)) {
+			arr.push( [ key, everynotes[key] ] );
+		}
+	}
+	arr.sort();
+
+	datapoints = [];
+	datapoints2 = [];
+	datapoints3 = [];
+
+	// double tableau to simple tableau
+	for (i = 0; i < arr.length; i++) {
+		datapoints.push(arr[i][1] * 20); // notes
+		if (i == 0) datapoints2.push(arr[0][1] * 20); // évolution de la moyenne
+		datapoints2.push(((datapoints2[datapoints2.length - 1] * datapoints2.length) + (arr[i][1] * 20)) / (datapoints2.length +1));
+		if (i == 0) datapoints2.shift();
+		datapoints3.push(GlobalAverage); // const average
+	}
+	
+	// create chart
+	labels = [];
+	for (let i = 0; i < datapoints.length; ++i) {
+		labels.push(i.toString());
+	}
+	
+	radius = 4;
+	tension = 0.2;
+	massPopChart = new Chart(document.getElementById("graphic").getContext('2d'), {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [{
+				label: 'Notes ce trimestre',
+				data: datapoints,
+				borderColor: "#000",
+				tension: tension,
+				pointRadius: radius,
+			},{
+				label: 'Evolution de la moyenne (non pondéré par matières), écart de ' + Math.round(Math.sqrt((datapoints2[datapoints2.length -1] - GlobalAverage) ** 2) * 1000) / 1000 + ' avec la moyenne générale', // nombre positif d'écart entre la moyenne pondéré et non pondéré par matiere
+				data: datapoints2,
+				borderColor: "#F00",
+				tension: tension,
+				pointRadius: radius,
+			},{
+				label: 'Moyenne générale', // moyenne générale
+				data: datapoints3,
+				borderColor: "#00F",
+				tension: tension,
+				pointRadius: 0,
+			}]
+		},
+		options: {
+			responsive: true,
+			plugins: {
+				title: {
+					display: true,
+					text: 'Evolution de tes notes ce trimestre',
+				},
+			},
+			scales: {
+				y: {
+					suggestedMax: 20,
+				}
+			}
+		},
+	});
+	// GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS GRAPHICS
+}
+
 function display(GlobalAverage) {
 	// obtenir le contenue HTML de la page
 	if (String(GlobalAverage) == "NaN") {
@@ -242,8 +395,20 @@ async function init() {
 
 	// fonctions initials
 	await new Promise(resolve => setTimeout(resolve, 2000));
-	column();
-	getMoyenne();
+    
+    displayAverage = true;
+    for (i = document.getElementById("encart-notes").getElementsByTagName("table")[0].getElementsByTagName("thead")[0].getElementsByTagName("tr")[0].getElementsByTagName("th").length - 1; i >= 0; i--) { 
+        if (document.getElementById("encart-notes").getElementsByTagName("table")[0].getElementsByTagName("thead")[0].getElementsByTagName("tr")[0].getElementsByTagName("th")[i].innerText.toLowerCase() == "moyennes") {
+            displayAverage = false;
+            
+        }
+    }
+    if (displayAverage) {
+        column();
+        getMoyenne();
+    } else {
+        getMoyenneWME();  
+    }
 	return true;
 }
 
