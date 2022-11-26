@@ -241,7 +241,6 @@ function getMoyenneWME() {
         if (note == note && document.getElementsByClassName("relevemoyenne")[i].innerText != "") {
             total += note;
             effectif += 1;
-            console.log(note)
         }
     }
     GlobalAverage = total / effectif;
@@ -263,7 +262,7 @@ function getMoyenneWME() {
     
     // effacer les lignes sans notes
 	for (n = document.getElementsByClassName("discipline").length - 1; n >= 1; n--) {
-		if (document.getElementsByClassName("discipline")[n].parentElement.lastChild.innerText == "") {
+		if (document.getElementsByClassName("discipline")[n].parentElement.getElementsByClassName("notes")[0].innerText == "") {
 			if (document.getElementsByClassName("discipline")[n].classList.contains("sousmatiere")) { // si c'est une sous-matiere
 				document.getElementsByClassName("discipline")[n].parentElement.remove();
 				
@@ -274,7 +273,7 @@ function getMoyenneWME() {
 				document.getElementsByClassName("discipline")[n].parentElement.remove();
 			}
 		}
-	}
+    }
 	
 	for (x = 1; x < document.getElementsByClassName("discipline").length; x++) { // pour toutes les matières
 		// créer le tableau
