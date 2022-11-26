@@ -1,18 +1,35 @@
-function column() {
+function column(CreateAverageCol) {
 
     // afficher la graphique d'évolution des notes
 	document.getElementsByClassName("bloc-legende")[0].remove()
 	document.getElementById("encart-notes").innerHTML += "<div id='flex'><div class='bloc-legende clear hidden-print ng-star-inserted' style='grid-row: initial;'><div class='col-md-6 ng-star-inserted'><table><caption>Légende des notes</caption><tbody><tr><td style='width: 70px;'> note <sup>(x)</sup></td><td>Note coefficientée</td></tr><tr><td> note <sub>/X</sub></td><td>Note sur X</td></tr><tr><td>(note)</td><td>Note non significative</td></tr><tr><td><span class='newNote'>note</span></td><td>Nouvelle note</td></tr><!----><tr><td><span class='note-examen-blanc'>note</span></td><td>Examen blanc</td></tr><tr><td>Abs</td><td>Absent</td></tr><tr><td>Disp</td><td>Dispensé</td></tr><tr><td>NE</td><td>Non évalué</td></tr><tr><td>EA</td><td>En attente</td></tr></tbody></table></div></div><canvas id='graphic'></canvas></div>";
     
 	// créer les colonnes des moyennes
-    for (var i = document.getElementsByClassName("notes").length - 1; i > 0; i--) {
-        document.getElementsByClassName("notes")[i].parentElement.innerHTML = document.getElementsByClassName("notes")[i].parentElement.innerHTML + "<td class=\"average\"></td>";
+    if (CreateAverageCol) {
+        for (var i = document.getElementsByClassName("notes").length - 1; i > 0; i--) {
+            document.getElementsByClassName("notes")[i].parentElement.innerHTML = document.getElementsByClassName("notes")[i].parentElement.innerHTML + "<td class=\"average\"></td>";
+        }
+        document.getElementsByClassName("notes")[0].parentElement.innerHTML = document.getElementsByClassName("notes")[0].parentElement.innerHTML + "<th>Moyennes</th>";
     }
-    document.getElementsByClassName("notes")[0].parentElement.innerHTML = document.getElementsByClassName("notes")[0].parentElement.innerHTML + "<th>Moyennes</th>";
 
     // supprimer les colonnes graph
     for (var i = document.getElementsByClassName("graph").length -1; i >= 0; i--) {
         document.getElementsByClassName("graph")[i].style.display = "none";
+    }
+    
+    // effacer les lignes sans notes
+	for (n = document.getElementsByClassName("discipline").length - 1; n >= 1; n--) {
+		if (document.getElementsByClassName("discipline")[n].parentElement.getElementsByClassName("notes")[0].innerText == "") {
+			if (document.getElementsByClassName("discipline")[n].classList.contains("sousmatiere")) { // si c'est une sous-matiere
+				document.getElementsByClassName("discipline")[n].parentElement.remove();
+				
+			} else if (n == document.getElementsByClassName("discipline").length - 1) { // si c'est la dernière moyenne
+				document.getElementsByClassName("discipline")[n].parentElement.remove();
+				
+			} else if (! document.getElementsByClassName("discipline")[n + 1].classList.contains("sousmatiere")) {
+				document.getElementsByClassName("discipline")[n].parentElement.remove();
+			}
+		}
     }
 }
 
@@ -26,6 +43,16 @@ function getMoyenne() {
     while (document.getElementsByClassName("discipline")[0].parentElement.children[x]) {
         if (document.getElementsByClassName("discipline")[0].parentElement.children[x].innerText == "EVALUATIONS") {
             constEvalPos = x;
+            break;
+        }
+        x++;
+    }
+    
+    // determiner ConstMoyennePos => positions du tableau des notes
+    x = 0;
+    while (document.getElementsByClassName("discipline")[0].parentElement.children[x]) {
+        if (document.getElementsByClassName("discipline")[0].parentElement.children[x].innerText == "MOYENNES") {
+            ConstMoyennePos = x;
             break;
         }
         x++;
@@ -88,24 +115,9 @@ function getMoyenne() {
 			
 			// afficher les moyennes
 			if (sousmatiere) {
-				document.getElementsByClassName("discipline")[x].parentElement.children[3].innerHTML = "( " + Math.round(average * 20 * 1000) / 1000 + " /20 )";
+				document.getElementsByClassName("discipline")[x].parentElement.children[ConstMoyennePos].innerHTML = "( " + Math.round(average * 20 * 1000) / 1000 + " /20 )";
 			} else {
-				document.getElementsByClassName("discipline")[x].parentElement.children[3].innerHTML = Math.round(average * 20 * 1000) / 1000 + " /20";
-			}
-		}
-	}
-
-	// effacer les lignes sans notes
-	for (n = document.getElementsByClassName("discipline").length - 1; n >= 1; n--) {
-		if (document.getElementsByClassName("discipline")[n].parentElement.lastChild.innerText == "") {
-			if (document.getElementsByClassName("discipline")[n].classList.contains("sousmatiere")) { // si c'est une sous-matiere
-				document.getElementsByClassName("discipline")[n].parentElement.remove();
-				
-			} else if (n == document.getElementsByClassName("discipline").length - 1) { // si c'est la dernière moyenne
-				document.getElementsByClassName("discipline")[n].parentElement.remove();
-				
-			} else if (! document.getElementsByClassName("discipline")[n + 1].classList.contains("sousmatiere")) {
-				document.getElementsByClassName("discipline")[n].parentElement.remove();
+				document.getElementsByClassName("discipline")[x].parentElement.children[ConstMoyennePos].innerHTML = Math.round(average * 20 * 1000) / 1000 + " /20";
 			}
 		}
 	}
@@ -118,14 +130,14 @@ function getMoyenne() {
 			if (document.getElementsByClassName("discipline")[x + 1].parentElement.children[0].classList.contains("sousmatiere")) { // vérifie si la 1e cases après appartient à cette matière
 
 				if (document.getElementsByClassName("discipline")[x + 2].parentElement.children[0].classList.contains("sousmatiere")) { // vérifie si la 2e cases après appartient à cette matière
-					MatiereAverage = ((Number(document.getElementsByClassName("discipline")[x + 1].parentElement.children[3].innerText.replace("( ", "").replace("/20 )", "")) || 0) + Number(document.getElementsByClassName("discipline")[x + 2].parentElement.children[3].innerText.replace("( ", "").replace("/20 )", "")) || 0) / 2;
+					MatiereAverage = ((Number(document.getElementsByClassName("discipline")[x + 1].parentElement.children[ConstMoyennePos].innerText.replace("( ", "").replace("/20 )", "")) || 0) + Number(document.getElementsByClassName("discipline")[x + 2].parentElement.children[ConstMoyennePos].innerText.replace("( ", "").replace("/20 )", "")) || 0) / 2;
 
 				} else {
-					MatiereAverage = Number(document.getElementsByClassName("discipline")[x + 1].parentElement.children[(3)].innerText.replace("( ", "").replace("/20 )", ""));
+					MatiereAverage = Number(document.getElementsByClassName("discipline")[x + 1].parentElement.children[ConstMoyennePos].innerText.replace("( ", "").replace("/20 )", ""));
 					
 				}
 				// affiche la moyenne trouvé.
-				document.getElementsByClassName("discipline")[x].parentElement.children[3].innerHTML = MatiereAverage + " /20";
+				document.getElementsByClassName("discipline")[x].parentElement.children[ConstMoyennePos].innerHTML = MatiereAverage + " /20";
 			}
 		}
 	}
@@ -229,9 +241,6 @@ function getMoyenne() {
 }
 
 function getMoyenneWME() {
-    // afficher la graphique d'évolution des notes
-	document.getElementsByClassName("bloc-legende")[0].remove()
-	document.getElementById("encart-notes").innerHTML += "<div id='flex'><div class='bloc-legende clear hidden-print ng-star-inserted' style='grid-row: initial;'><div class='col-md-6 ng-star-inserted'><table><caption>Légende des notes</caption><tbody><tr><td style='width: 70px;'> note <sup>(x)</sup></td><td>Note coefficientée</td></tr><tr><td> note <sub>/X</sub></td><td>Note sur X</td></tr><tr><td>(note)</td><td>Note non significative</td></tr><tr><td><span class='newNote'>note</span></td><td>Nouvelle note</td></tr><!----><tr><td><span class='note-examen-blanc'>note</span></td><td>Examen blanc</td></tr><tr><td>Abs</td><td>Absent</td></tr><tr><td>Disp</td><td>Dispensé</td></tr><tr><td>NE</td><td>Non évalué</td></tr><tr><td>EA</td><td>En attente</td></tr></tbody></table></div></div><canvas id='graphic'></canvas></div>";
 
     // calculer la moyenne générale puis l'afficher
     total = 0;
@@ -260,20 +269,6 @@ function getMoyenneWME() {
         x++;
     }
     
-    // effacer les lignes sans notes
-	for (n = document.getElementsByClassName("discipline").length - 1; n >= 1; n--) {
-		if (document.getElementsByClassName("discipline")[n].parentElement.getElementsByClassName("notes")[0].innerText == "") {
-			if (document.getElementsByClassName("discipline")[n].classList.contains("sousmatiere")) { // si c'est une sous-matiere
-				document.getElementsByClassName("discipline")[n].parentElement.remove();
-				
-			} else if (n == document.getElementsByClassName("discipline").length - 1) { // si c'est la dernière moyenne
-				document.getElementsByClassName("discipline")[n].parentElement.remove();
-				
-			} else if (! document.getElementsByClassName("discipline")[n + 1].classList.contains("sousmatiere")) {
-				document.getElementsByClassName("discipline")[n].parentElement.remove();
-			}
-		}
-    }
 	
 	for (x = 1; x < document.getElementsByClassName("discipline").length; x++) { // pour toutes les matières
 		// créer le tableau
@@ -410,19 +405,37 @@ async function init() {
 	// fonctions initials
 	await new Promise(resolve => setTimeout(resolve, 2000));
     
-    displayAverage = true;
+    // si il y a deja une colonne moyenne
+    displayAverage = 0;
     for (i = document.getElementById("encart-notes").getElementsByTagName("table")[0].getElementsByTagName("thead")[0].getElementsByTagName("tr")[0].getElementsByTagName("th").length - 1; i >= 0; i--) { 
         if (document.getElementById("encart-notes").getElementsByTagName("table")[0].getElementsByTagName("thead")[0].getElementsByTagName("tr")[0].getElementsByTagName("th")[i].innerText.toLowerCase() == "moyennes") {
-            displayAverage = false;
-            
+            // verifier que au moins une moyenne contient un nombre
+            total = 0;
+            for (i = document.getElementsByClassName("relevemoyenne").length - 1; i >= 0; i--) {
+                note = Number(document.getElementsByClassName("relevemoyenne")[i].innerText.replace(",", "."));
+                if (note == note && document.getElementsByClassName("relevemoyenne")[i].innerText != "") {
+                    total += note;
+                }
+            }
+            if (total != 0) {
+                displayAverage = 1;
+            } else {
+                displayAverage = 2;
+            }
         }
     }
-    if (displayAverage) {
-        column();
+    
+    if (displayAverage == 0) {
+        column(true);
         getMoyenne();
-    } else {
+    } else if (displayAverage == 1) {
+        column(false);
         getMoyenneWME();  
+    } else if (displayAverage == 2) {
+        column(false);
+        getMoyenne();
     }
+    
 	return true;
 }
 
