@@ -26,7 +26,7 @@
 
 .ed-container > .main-container > .fade > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div#flex {
 	display: flex;
-	justify-content: start;
+	justify-content: space-around;
 	width: 100%;
 }
 
@@ -46,7 +46,7 @@
 .ed-container > .main-container > .fade > .ng-star-inserted > div > #unePeriode > .tab-content > .tab-pane > .ng-star-inserted > #encart-notes > div#flex > canvas#graphic {
 	width: 70% !important;
 	height: auto !important;
-	margin: 0 auto;
+	margin: 0;
 	border-radius: 5px;
 	background: #fff;
 	padding: 10px;
